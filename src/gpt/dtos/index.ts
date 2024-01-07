@@ -1,1 +1,1 @@
-export * from './orthography.dto';
+export * from './requestOpenAi.dto';

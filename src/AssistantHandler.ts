@@ -9,7 +9,7 @@ class AssistantHandler {
     apiKey: process.env.OPENAI_API_KEY,
     organization: process.env.OPENAI_ORGANIZATION,
   });
-  orthographyCheckUseCase = async (options: Options) => {
+  orthographyCheck = async (options: Options) => {
     const { prompt } = options;
     const completion = await this.openai.chat.completions.create({
       messages: [
@@ -37,6 +37,48 @@ class AssistantHandler {
     });
     const jsonResp = JSON.parse(completion.choices[0].message.content);
     return jsonResp;
+  };
+
+  prosConsDicusser = async ({ prompt }: Options) => {
+    const response = await this.openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [
+        {
+          role: 'system',
+          content: `Se te dará una pregunta y tu tarea es dar una respuesta con pros y contras,
+la respuesta debe de ser en formato markdown,
+los pros y contras deben de estar en una lista,`,
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      temperature: 0.8,
+      max_tokens: 500,
+    });
+    return response.choices[0].message;
+  };
+
+  prosConsDicusserStream = async ({ prompt }: Options) => {
+    return await this.openai.chat.completions.create({
+      stream: true,
+      model: 'gpt-4',
+      messages: [
+        {
+          role: 'system',
+          content: `Se te dará una pregunta y tu tarea es dar una respuesta con pros y contras,
+la respuesta debe de ser en formato markdown,
+los pros y contras deben de estar en una lista,`,
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      temperature: 0.8,
+      max_tokens: 500,
+    });
   };
 }
 

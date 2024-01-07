@@ -1,6 +1,6 @@
 import { IsInt, IsOptional, IsString } from 'class-validator';
 
-export class OrthographyDto {
+export class RequestOpenAiDto {
   @IsString()
   readonly prompt: string;
   @IsInt()
